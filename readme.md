@@ -3,6 +3,7 @@
 ## Dev
 1. Clonar el repo
 2. Crear un .env basado en el .env.template
+3. Ejecutar el comando `git submodule update --init --recursive` para construir los submodulos
 3. Ejecutar el comando `docker compose up --build`
 
 
