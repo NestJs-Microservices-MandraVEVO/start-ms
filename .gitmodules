@@ -4,3 +4,6 @@
 [submodule "products-ms"]
 	path = products-ms
 	url = https://github.com/NestJs-Microservices-MandraVEVO/products-mc.git
+[submodule "orders-ms"]
+	path = orders-ms
+	url = https://github.com/NestJs-Microservices-MandraVEVO/orders-ms.git
