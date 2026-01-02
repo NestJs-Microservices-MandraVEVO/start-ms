@@ -3,6 +3,7 @@ services:
     image: nats:latest
     ports:
       - "8222:8222"
+      - "4222:4222"
   client-gateway:
     build: ./client-gateway
     ports:
@@ -51,6 +52,22 @@ services:
       - POSTGRES_PASSWORD=123456
       - POSTGRES_DB=orders_db
 
+  # =====================================
+  # MongoDB para Auth Service
+  # =====================================
+  mongo-db:
+    container_name: mongo_db
+    image: mongo:7.0
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+
   payments-ms:
     container_name: payments_ms
     build: ./payments-ms
@@ -68,10 +85,26 @@ services:
       - STRIPE_ENDPOINT_SECRET=${STRIPE_ENDPOINT_SECRET}
 
   auth-ms:
+    depends_on:
+      - mongo-db
     build: ./auth-ms
     volumes:
       - ./auth-ms/src:/usr/src/app/src
     command: yarn start:dev
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
     environment:
       - PORT=3007
       - NATS_SERVERS=nats://nats-server:4222
+      # MongoDB - Opción 1: Variables separadas (ACTIVO)
+      - MONGO_USER=${MONGO_USER}
+      - MONGO_PASSWORD=${MONGO_PASSWORD}
+      - MONGO_DB_NAME=${MONGO_DB_NAME}
+      - MONGO_HOST=mongo-db
+      # MongoDB - Opción 2: URI completa (COMENTADO)
+      # - MONGO_URI=${MONGO_URI}
+
+volumes:
+  postgres-db:
+  mongo-data:
