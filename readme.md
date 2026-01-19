@@ -41,3 +41,8 @@ Si se hace al revés, se perderán las referencias de los sub-módulos en el rep
 
 ## Reiniciar servicio de ordenes (en caso de que no aparezca)
 docker compose restart orders-ms
+
+# PROD
+1. Clonar el repositorio
+2. Crear un .env basado en el .env.template
+3. Ejecutar el comando ´´´docker compose -f docker-compose.prod.yml build´´´
