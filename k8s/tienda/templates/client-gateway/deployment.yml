@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: client-gateway
+  name: client-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client-gateway
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: client-gateway
+    spec:
+      imagePullSecrets:
+      - name: gcregistery-json-key
+      containers:
+      - image: northamerica-south1-docker.pkg.dev/tienda-ms-485104/image-registry/client-gateway
+        name: client-gateway
+        ports:
+        - containerPort: 3000
+        env:
+        - name: PORT
+          value: "3000"
+        - name: NATS_SERVERS
+          value: "nats://nats"
+        resources: {}
+status: {}
+

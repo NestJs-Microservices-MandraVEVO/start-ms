@@ -81,3 +81,7 @@ kubectl create -f <nombre>.yml
 ```
 
 
+## IMPORTANTE, si usas minicube a la hora de probar endpoints se hace el siguiente comando y ese es en lugar de localhost
+```
+minikube service client-gateway-service --url
+```
