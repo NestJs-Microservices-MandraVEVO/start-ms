@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: orders-ms
+  name: orders-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-ms
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: orders-ms
+    spec:
+      imagePullSecrets:
+      - name: gcregistery-json-key
+      containers:
+      - image: northamerica-south1-docker.pkg.dev/tienda-ms-485104/image-registry/orders-ms
+        name: orders-ms
+        env:
+        - name: PORT
+          value: "3003"
+        - name: NATS_SERVERS
+          value: "nats://nats"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: orders-secrets
+              key: database_url
+        resources: {}
+status: {}
