@@ -85,3 +85,66 @@ kubectl create -f <nombre>.yml
 ```
 minikube service client-gateway-service --url
 ```
+
+
+
+
+
+
+## NO ALCANCE A LOS CREDITOS PARA PREPARAR EL KUBERNETES ENGINE ASI QUE AQUI LOS PASOS PARA DESPUES
+1. entrar a los clusters de servicio creado y dar clic en connect y copiar el comando para conectar con gcloud
+2. si da error de CRITICAL: auth-plugin te lleva a un enlace para instalar el plugin de auth, pero en caso omiso solo muestra que se creo
+3. al ejecutar el comando de 
+```
+kubectl get confing get-contexts
+```
+muestra que esta seleccionando, pero si quieres regresar a estar de manera local se usa lo siguiente
+```
+kubectl config use-context <nombrecontexto>
+```
+## configurar GKE
+1. revisar estar en la carpeta de tienda
+2. hacer el siguiente comando
+```
+helm create tienda-gke
+```
+### nota: si hubo un error de levantamiento de configuracion hacer uso de describe o de logs para ver los mensajes de error que se muestran, esto puede pasar porque no se tomaron los valores de los secretos
+
+3. exportar la config del anterior espacio de trabajo del desktop
+```
+kubectl config get-context //para ver el espacio de trabajo
+kubectl confing use-context <nombre>
+kubectl get secret auth-secrets -o yaml > auth-secret.yml //hacer esto para todas las config realizadas
+``` 
+# OJO, no hacer commit porque se genera el yaml con los secrets y puede exponerlos
+
+4. regresar al contexto
+```
+kubectl config get-context //para ver el espacio de trabajo
+kubectl confing use-context <nombre> //para regresar al contexto de google
+```
+5. crear los secrets en el entorno
+```
+kubectl create -f <nombre>.yml
+```
+6. borrar los archivos yaml, tener en cuenta que si se crea 2 carpetas hacer eliminacion de archivos innecesarios
+
+## Borrar archivos innecesarios
+1. abrir de donde se creo esa carpeta con las nuevas config y copiar el chart y ponerle el mismo nombre al de tienda
+2. borrar esa carpeta y regresar a la consola y ver los pods 
+3. acutalizar con helm
+```
+helm upgrade tienda-gke .
+```
+4. y revisar para confirmar que se haya desinstalado para ver que este bien
+
+## BALANCEADORES DE CARGA - Ingress
+1. En la parte de kubernetes engine en la seccion de Gateways, services & Ingress
+2. configurar en la parte de yml en la carpeta de ingress creada en templates
+3. usar el comando helm para actualizar la tienda
+4. se deben de ver ahora en el ingress de googlecloud **se tarda un rato en reflejarse
+5. al abrir la direccion ip debe mostrar el health-check creados //no corre con SSL
+6. comprobar que funcione la ip dada para que muestre los mensajes creados
+7. para activar el ssl usar la siguiente documentacion:
+
+https://docs.cloud.google.com/kubernetes-engine/docs/how-to/managed-certs?hl=es-419
