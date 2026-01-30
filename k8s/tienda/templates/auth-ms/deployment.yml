@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: auth-ms
+  name: auth-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-ms
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: auth-ms
+    spec:
+      imagePullSecrets:
+      - name: gcregistery-json-key
+      containers:
+      - image: northamerica-south1-docker.pkg.dev/tienda-ms-485104/image-registry/auth-ms
+        name: auth-ms
+        env:
+        - name: PORT
+          value: "3007"
+        - name: NATS_SERVERS
+          value: "nats://nats"
+        - name: MONGO_USER
+          valueFrom:
+            secretKeyRef:
+              name: auth-ms-secrets
+              key: mongo_user
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: auth-ms-secrets
+              key: mongo_password
+        - name: MONGO_DB_NAME
+          valueFrom:
+            secretKeyRef:
+              name: auth-ms-secrets
+              key: mongo_db_name
+        - name: MONGO_HOST
+          value: "mongo-db-service"
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: auth-ms-secrets
+              key: jwt_secret
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: auth-ms-secrets
+              key: database_url
+        resources: {}
+status: {}

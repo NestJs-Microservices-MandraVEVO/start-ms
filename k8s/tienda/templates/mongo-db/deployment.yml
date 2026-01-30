@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mongo-db
+  name: mongo-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-db
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: mongo-db
+    spec:
+      containers:
+      - image: mongo:7.0
+        name: mongo-db
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: auth-ms-secrets
+              key: mongo_user
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: auth-ms-secrets
+              key: mongo_password
+        - name: MONGO_INITDB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: auth-ms-secrets
+              key: mongo_db_name
+        resources: {}
+status: {}
